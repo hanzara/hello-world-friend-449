@@ -22,7 +22,7 @@ const Signup = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<UserRole>('admin');
+  const [role, setRole] = useState<UserRole>('student');
   const [loading, setLoading] = useState(false);
   const { signUp, user } = useAuth();
   const { toast } = useToast();
@@ -60,7 +60,7 @@ const Signup = () => {
     } else {
       toast({
         title: 'Success',
-        description: 'Account created successfully! Please check your email to confirm.',
+        description: 'Account created successfully! You can now sign in.',
       });
       navigate('/login');
     }
@@ -72,7 +72,7 @@ const Signup = () => {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">School Management System</CardTitle>
           <CardDescription className="text-center">
-            Create your admin account to get started
+            Create your account to get started
           </CardDescription>
         </CardHeader>
           <CardContent>
