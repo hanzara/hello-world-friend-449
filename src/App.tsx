@@ -69,9 +69,6 @@ const ProtectedLayout = () => (
               </ProtectedRoute>
             } />
             
-            {/* Admin-only signup route */}
-            <Route path="/signup" element={<Signup />} />
-            
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -90,6 +87,7 @@ const App = () => (
           <Sonner />
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/*" element={
               <ProtectedRoute>
                 <ProtectedLayout />
