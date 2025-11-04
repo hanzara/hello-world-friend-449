@@ -89,6 +89,17 @@ const Login = () => {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
+            <div className="text-center text-sm text-muted-foreground mt-4">
+              Don't have an account?{' '}
+              <Button
+                type="button"
+                variant="link"
+                className="p-0 h-auto font-semibold"
+                onClick={() => navigate('/signup')}
+              >
+                Sign up
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { z } from 'zod';
 
 const signupSchema = z.object({
@@ -19,15 +18,20 @@ const signupSchema = z.object({
 
 type UserRole = 'admin' | 'headteacher' | 'teacher' | 'staff' | 'parent' | 'student';
 
-const SignupContent = () => {
+const Signup = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<UserRole>('student');
+  const [role, setRole] = useState<UserRole>('admin');
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
+  const { signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,25 +60,21 @@ const SignupContent = () => {
     } else {
       toast({
         title: 'Success',
-        description: 'User created successfully',
+        description: 'Account created successfully! Please check your email to confirm.',
       });
-      setFullName('');
-      setEmail('');
-      setPassword('');
-      setRole('student');
+      navigate('/login');
     }
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>Create New User</CardTitle>
-            <CardDescription>
-              Register a new user and assign their role in the system
-            </CardDescription>
-          </CardHeader>
+    <div className="flex items-center justify-center min-h-screen bg-background p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">School Management System</CardTitle>
+          <CardDescription className="text-center">
+            Create your admin account to get started
+          </CardDescription>
+        </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -126,27 +126,24 @@ const SignupContent = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex gap-4">
-                <Button type="submit" disabled={loading}>
-                  {loading ? 'Creating...' : 'Create User'}
-                </Button>
-                <Button type="button" variant="outline" onClick={() => navigate(-1)}>
-                  Cancel
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Creating...' : 'Create Account'}
+              </Button>
+              <div className="text-center text-sm text-muted-foreground mt-4">
+                Already have an account?{' '}
+                <Button
+                  type="button"
+                  variant="link"
+                  className="p-0 h-auto font-semibold"
+                  onClick={() => navigate('/login')}
+                >
+                  Sign in
                 </Button>
               </div>
             </form>
           </CardContent>
         </Card>
-      </div>
     </div>
-  );
-};
-
-const Signup = () => {
-  return (
-    <ProtectedRoute allowedRoles={['admin']}>
-      <SignupContent />
-    </ProtectedRoute>
   );
 };
 
