@@ -38,10 +38,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      return data?.role as UserRole || null;
+      return (data?.role as UserRole) || null;
     } catch (error) {
       console.error('Error fetching user role:', error);
       return null;
